@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // $this->middleware('user-access')->only(['show', 'edit', 'update', 'destroy']);
+    }
+
     public function index(Request $request)
     {
         $query = Post::query();
@@ -15,9 +22,9 @@ class PostController extends Controller
             $query->where('title', 'like', '%' . $request->input('search') . '%');
         }
 
-        $posts = $query->orderBy('status', 'desc')->orderBy('created_at', 'desc')->get();
-        $ongoingCount = Post::where('status', 1)->count();
-        $completedCount = Post::where('status', 0)->count();
+        $posts = $query->orderBy('status', 'desc')->where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        $ongoingCount = Post::where('status', 1)->where('user_id', Auth::id())->count();
+        $completedCount = Post::where('status', 0)->where('user_id', Auth::id())->count();
 
         return view('posts.index', compact('posts', 'ongoingCount', 'completedCount'));
     }
@@ -34,16 +41,17 @@ class PostController extends Controller
             'status' => 'required'
         ]);
 
-        $posts = Post::create([
-            'title' => $request->title,
-            'status' => $request->status
-        ]);
+        $data = $request->all();
+        $data['user_id'] = auth()->id();
+
+        Post::create($data);
 
         return redirect()->route('posts.index')->with('success', 'posts berhasil ditambahkan');
     }
 
     public function show()
     {
+        // 
     }
 
     public function edit(string $id)
@@ -97,17 +105,17 @@ class PostController extends Controller
 
     public function trash()
     {
-        $posts = Post::onlyTrashed()->get();
-        $ongoing = Post::where('status', 1)->onlyTrashed()->count();
-        $completed = Post::where('status', 0)->onlyTrashed()->count();
+        $posts = Post::onlyTrashed()->where('user_id', Auth::id())->get();
+        $ongoing = Post::where('status', 1)->onlyTrashed()->where('user_id', Auth::id())->count();
+        $completed = Post::where('status', 0)->onlyTrashed()->where('user_id', Auth::id())->count();
         return view('posts.trash', compact('posts', 'ongoing', 'completed'));
     }
 
     public function filter($status)
     {
         $posts = Post::where('status', $status)->orderBy('created_at', 'desc')->get();
-        $ongoingCount = Post::where('status', 1)->count();
-        $completedCount = Post::where('status', 0)->count();
+        $ongoingCount = Post::where('status', 1)->where('user_id', Auth::id())->count();
+        $completedCount = Post::where('status', 0)->where('user_id', Auth::id())->count();
 
         return view('posts.index', compact('posts', 'ongoingCount', 'completedCount'));
     }
@@ -115,8 +123,8 @@ class PostController extends Controller
     public function filterTrash($status)
     {
         $posts = Post::where('status', $status)->orderBy('created_at', 'desc')->get();
-        $ongoing = Post::where('status', 1)->onlyTrashed()->count();
-        $completed = Post::where('status', 0)->onlyTrashed()->count();
+        $ongoing = Post::where('status', 1)->onlyTrashed()->where('user_id', Auth::id())->count();
+        $completed = Post::where('status', 0)->onlyTrashed()->where('user_id', Auth::id())->count();
 
         return view('posts.trash', compact('posts', 'ongoing', 'completed'));
     }
