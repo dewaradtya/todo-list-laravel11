@@ -50,23 +50,23 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $row->title }}</td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($row->status == 1)
                                                     berlangsung
                                                 @else
                                                     selesai
                                                 @endif
                                             </td>
-                                            <td>{{ $row->created_at->format('j F Y') }}</td>
-                                            <td class="align-middle">
+                                            <td class="text-center">{{ $row->created_at->format('j F Y') }}</td>
+                                            <td class="text-center">
                                                 <form action="{{ route('posts.restore', $row->id) }}" method="POST" class="d-inline">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Apakah Anda yakin ingin memulihkan posts ini?')">Pulihkan</button>
+                                                    <button type="submit" class="btn btn-success btn" onclick="return confirm('Apakah Anda yakin ingin memulihkan posts ini?')">Pulihkan</button>
                                                 </form>
                                                 <form action="{{ route('posts.forceDelete', $row->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus secara permanen posts ini?')">Hapus Permanen</button>
+                                                    <button type="submit" class="btn btn-danger btn" onclick="return confirm('Apakah Anda yakin ingin menghapus secara permanen posts ini?')">Hapus Permanen</button>
                                                 </form>
                                             </td>
                                         </tr>

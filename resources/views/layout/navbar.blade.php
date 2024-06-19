@@ -15,9 +15,11 @@
         </a>
 
         <form class="form-inline my-2 my-lg-0 ml-3" method="GET" action="{{ route('posts.index') }}">
-            <input class="form-control mr-sm-2" type="search" name="search" placeholder="Filter" aria-label="Search"
-                value="{{ request('search') }}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filter</button>
+            @if(!request()->is('trash') && !request()->is('posts/*/edit'))
+                <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search" aria-label="Search"
+                    value="{{ request('search') }}">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            @endif
         </form>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"

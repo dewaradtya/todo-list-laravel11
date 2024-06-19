@@ -8,11 +8,10 @@ Route::get('/', function () {
     return redirect('posts');
 });
 
-Route::get('login', [AuthController::class, 'login'])->name('login');
+Route::get('login', [AuthController::class, 'login'])->name('login')->middleware('guest');
+Route::get('register', [AuthController::class, 'register'])->name('register')->middleware('guest');
 Route::post('login', [AuthController::class, 'doLogin']);
-Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('register', [AuthController::class, 'doRegister']);
-Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('posts', PostController::class);
@@ -21,4 +20,5 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
     Route::get('posts/status/{status}', [PostController::class, 'filter'])->name('posts.filter');
     Route::get('posts/filter/{status}', [PostController::class, 'filterTrash'])->name('posts.filtrasi');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
