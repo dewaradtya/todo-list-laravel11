@@ -1,37 +1,44 @@
 @extends('layout.navbar')
 
 @section('content')
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold text-primary">Update posts</h6>
+<div class="container mx-auto py-4">
+    <div class="flex justify-center">
+        <div class="w-full max-w-lg">
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h6 class="text-xl font-bold text-gray-800 mb-4">Update Post</h6>
+                <form action="{{ route('posts.update', $posts->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="mb-4">
+                        <label for="title" class="block text-gray-700 font-bold mb-2">Jenis Post</label>
+                        <input type="text" id="title" name="title" placeholder="Masukkan jenis post"
+                            class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value="{{ $posts->title }}">
                     </div>
-                    <div class="card-body">
-                        <form action="{{ route('posts.update', $posts->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <div class="form-group">
-                                <label for="title">Jenis posts</label>
-                                <input type="text" class="form-control" id="title" name="title"
-                                    placeholder="Masukkan jenis posts" value="{{ $posts->title }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select class="form-control" id="status" name="status">
-                                    <option value="1" {{ $posts->status == '1' ? 'selected' : '' }}>berlangsung
-                                    </option>
-                                    <option value="0" {{ $posts->status == '0' ? 'selected' : '' }}>selesai
-                                    </option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                            <a href="{{ route('posts.index') }}" class="btn btn-secondary">Batal</a>
-                        </form>
+
+                    <div class="mb-4">
+                        <label for="status" class="block text-gray-700 font-bold mb-2">Status</label>
+                        <select id="status" name="status"
+                            class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="1" {{ $posts->status == '1' ? 'selected' : '' }}>Berlangsung</option>
+                            <option value="0" {{ $posts->status == '0' ? 'selected' : '' }}>Selesai</option>
+                        </select>
                     </div>
-                </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <button type="submit"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            Simpan
+                        </button>
+                        <a href="{{ route('posts.index') }}"
+                            class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                            Batal
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 @endsection
