@@ -38,7 +38,9 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'description' => 'nullable',
+            'due_date' => 'nullable'
         ]);
 
         $data = $request->all();
@@ -65,13 +67,17 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'description' => 'nullable',
+            'due_date' => 'nullable'
         ]);
 
         $post = Post::where('user_id', Auth::id())->findOrFail($id);
 
         $post->title = $request->title;
         $post->status = $request->status;
+        $post->description = $request->description;
+        $post->due_date = $request->due_date;
         $post->save();
 
         return redirect()->route('posts.index')->with('success', 'Post berhasil diperbarui');
